@@ -39,7 +39,7 @@ public class Grafo {
 	
 	//metodo que informa se ao adicionar certa aresta a arvore que vai receber tera ciclo ou nao
 	public boolean temCiclo(Aresta aresta){
-		String anterior = aresta.getDestino();
+		Vertice anterior = aresta.getDestino();
 		
 		for(int j=0; j<this.getArestas().size() ;j++){
 			
@@ -49,9 +49,9 @@ public class Grafo {
 					this.getArestas().get(i).setCicloVerificado(true);
 				else if (aresta!=this.getArestas().get(i)){
 					
-					if (anterior.equals(this.getArestas().get(i).getOrigem())){
+					if (anterior.getNome().equals(this.getArestas().get(i).getOrigem().getNome())){
 						
-						if	(aresta.getOrigem().equals(this.getArestas().get(i).getDestino())){
+						if	(aresta.getOrigem().getNome().equals(this.getArestas().get(i).getDestino().getNome())){
 							this.limparCicloVerificado();
 							return true;
 						}else{
@@ -59,9 +59,9 @@ public class Grafo {
 							this.getArestas().get(i).setCicloVerificado(true);
 						}	
 						
-					}else if (anterior.equals(this.getArestas().get(i).getDestino())){
+					}else if (anterior.getNome().equals(this.getArestas().get(i).getDestino().getNome())){
 						
-						if	(aresta.getOrigem().equals(this.getArestas().get(i).getOrigem())){
+						if	(aresta.getOrigem().getNome().equals(this.getArestas().get(i).getOrigem().getNome())){
 							this.limparCicloVerificado();
 							return true;
 						}else{
@@ -96,7 +96,7 @@ public class Grafo {
 	
 	public void imprimeArvore(){
 		for (int i=0; i<arestas.size();i++)
-			System.out.print(this.arestas.get(i).getOrigem() + this.arestas.get(i).getDestino() + " - " + this.arestas.get(i).getPeso() + " | ");
+			System.out.print(this.arestas.get(i).getOrigem().getNome() + this.arestas.get(i).getDestino().getNome() + " - " + this.arestas.get(i).getPeso() + " | ");
 		System.out.println();
 	}
 	

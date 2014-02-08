@@ -3,8 +3,8 @@ package com.estruturas;
 public class Aresta {
 
 	private int peso;
-	private String origem;
-	private String destino;
+	private Vertice origem;
+	private Vertice destino;
 	private boolean pesoVerificado = false; // utilizada no método identificacao de pesos
 	private boolean cicloVerificado = false; // utilizada no método identificacao de ciclos
 	
@@ -38,20 +38,26 @@ public class Aresta {
 		this.peso = peso;
 	}
 
-	public String getOrigem() {
+	public Vertice getOrigem() {
 		return origem;
 	}
 
 	public void setOrigem(String origem) {
-		this.origem = origem;
+		
+		this.origem = new Vertice();
+		this.origem.setNome(origem);
+		this.origem.addIncidentes(this);
 	}
 
-	public String getDestino() {
+	public Vertice getDestino() {
 		return destino;
 	}
 
 	public void setDestino(String destino) {
-		this.destino = destino;
+		
+		this.destino = new Vertice();
+		this.destino.setNome(destino);
+		this.destino.addIncidentes(this);
 	}
 
 }
