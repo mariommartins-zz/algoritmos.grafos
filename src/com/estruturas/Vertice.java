@@ -7,13 +7,18 @@ public class Vertice implements Comparable<Vertice> {
 	private int distancia;
 	private Vertice pai;
 	private ArrayList<Aresta> incidentes = new ArrayList<Aresta>();
+	private ArrayList<Vertice> vizinhos = new ArrayList<Vertice>();
 	private boolean visitado = false;
+	private String cor = "branco"; 
 	
-	//private String descricao;
-    
-    //private List<Aresta> arestas = new ArrayList<Aresta>();
-    //private List<Vertice> vizinhos = new ArrayList<Vertice>();
-	
+	public String getCor() {
+		return cor;
+	}
+
+	public void setCor(String cor) {
+		this.cor = cor;
+	}
+
 	public Vertice(String nome){
 		this.setNome(nome);
 	}
@@ -56,7 +61,38 @@ public class Vertice implements Comparable<Vertice> {
 	
 	public void addIncidentes(Aresta incide) {
 		this.incidentes.add(incide);
+		
+		//adicionando vizinhos a lista
+		if ( (incide.getOrigem().getNome().equals(this.getNome())) &&
+				(!this.isVizinho(incide.getDestino())) ){
+			
+			this.addVizinhos(incide.getDestino());
+			
+		}else if ( (incide.getDestino().getNome().equals(this.getNome())) &&
+				(!this.isVizinho(incide.getOrigem())) ){
+			
+			this.addVizinhos(incide.getOrigem());
+		}
 	}
+	
+	public void addVizinhos(Vertice vizinho) {
+		this.vizinhos.add(vizinho);
+	}
+
+	public ArrayList<Vertice> getVizinhos() {
+		return vizinhos;
+	}
+	
+	public boolean isVizinho(Vertice vizinho){
+		int i;
+		
+		for (i=0; i<this.vizinhos.size() ; i++)
+			if (this.vizinhos.get(i).getNome().equals(vizinho.getNome()))
+				return true;		
+		
+		return false;
+	}
+	
 
 	@Override
 	public int compareTo(Vertice vertice) {

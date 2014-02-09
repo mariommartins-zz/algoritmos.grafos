@@ -12,6 +12,7 @@ public class Algoritmos {
 		Grafo inicial = new Grafo();
 		Grafo arvoreKruskal = new Grafo();
 		Grafo caminhoDijkstra = new Grafo();
+		Grafo arvoreBuscaProfundidade = new Grafo();
 		Aresta arestaAux;
 		Vertice verticeAux1, verticeAux2;
 		int opcao = 5, peso;
@@ -22,6 +23,7 @@ public class Algoritmos {
 			System.out.println("2 - Imprimir Grafo dado");
 			System.out.println("3 - Obter arvore de Kruskal");
 			System.out.println("4 - Obter caminho de Dijkstra");
+			System.out.println("5 - Obter arvore de Busca em Profundidade");
 			System.out.println("0 - fim");
 			
 			opcao = Keyboard.readInt();
@@ -30,7 +32,6 @@ public class Algoritmos {
 				peso = Keyboard.readInt();
 				origem = Keyboard.readString();
 				destino = Keyboard.readString();
-				//arestaAux = new Aresta(peso,origem,destino);
 				inicial.addAresta(peso,origem,destino);
 				
 				inicial.imprimeArvore();
@@ -61,9 +62,20 @@ public class Algoritmos {
 				verticeAux1 = inicial.acharVertice(Keyboard.readString());
 				verticeAux2 = inicial.acharVertice(Keyboard.readString());
 				caminhoDijkstra.setVertices(inicial.encontrarMenorCaminhoDijkstra(verticeAux1, verticeAux2));
-				break;
-			case 5:
 				
+				inicial.limparVerticeVisitado();
+				break;
+				
+			case 5:
+				//Algoritmo de Busca em Profundidade
+				origem = Keyboard.readString();
+				destino = Keyboard.readString();
+				arvoreBuscaProfundidade.setArestas(inicial.buscaEmProfundidade(origem, destino));
+				
+				inicial.limparVerticeVisitado();
+				arvoreBuscaProfundidade.limparVerticeVisitado();
+				
+				arvoreBuscaProfundidade.imprimeArvore();
 				break;
 			case 0:
 				break;

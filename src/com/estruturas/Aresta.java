@@ -7,6 +7,8 @@ public class Aresta {
 	private Vertice destino;
 	private boolean pesoVerificado = false; // utilizada no método identificacao de pesos
 	private boolean cicloVerificado = false; // utilizada no método identificacao de ciclos
+	private boolean visitado = false;
+	
 	
 	public Aresta(int peso, Vertice origem, Vertice destino) {
 		this.setPeso(peso);
@@ -14,6 +16,14 @@ public class Aresta {
 		this.setDestino(destino);
 	}
 	
+	public boolean isVisitado() {
+		return visitado;
+	}
+
+	public void setVisitado(boolean visitado) {
+		this.visitado = visitado;
+	}
+
 	public boolean isPesoVerificado() {
 		return pesoVerificado;
 	}
