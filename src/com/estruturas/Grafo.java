@@ -77,19 +77,14 @@ public class Grafo {
 		return i;
 	}
 	
-	public void limparPesoVerificado (){
-		for(int i=0; i<this.getArestas().size() ;i++)
-			this.getArestas().get(i).setPesoVerificado(false);
-	}
-	
-	public void limparCicloVerificado (){
-		for(int i=0; i<this.getArestas().size() ;i++)
-			this.getArestas().get(i).setCicloVerificado(false);
-	}
-	
 	public void limparVerticeVisitado(){
 		for(int i=0; i<this.getVertices().size() ;i++)
 			this.getVertices().get(i).setVisitado(false);
+	}
+	
+	public void limparArestaVisitada(){
+		for(int i=0; i<this.getArestas().size() ;i++)
+			this.getArestas().get(i).setVisitado(false);
 	}
 	
 	public void imprimeArvore(){
@@ -140,18 +135,18 @@ public class Grafo {
 		int j;
 		
 		for(j=0; j<this.getArestas().size() ;j++){
-			if((this.getArestas().get(j).isPesoVerificado()==false)){
-				this.getArestas().get(j).setPesoVerificado(true);
+			if((this.getArestas().get(j).isVisitado()==false)){
+				this.getArestas().get(j).setVisitado(true);
 				
 				for(int i=(j+1); i<this.getArestas().size() ;i++){
 					
-					if ((this.getArestas().get(i).isPesoVerificado()==false) && 
+					if ((this.getArestas().get(i).isVisitado()==false) && 
 							(this.getArestas().get(j).getPeso() > this.getArestas().get(i).getPeso())){
 						
 
-						this.getArestas().get(j).setPesoVerificado(false);
+						this.getArestas().get(j).setVisitado(false);
 						j = i;
-						this.getArestas().get(j).setPesoVerificado(true);
+						this.getArestas().get(j).setVisitado(true);
 					}
 				}
 				
@@ -171,34 +166,34 @@ public class Grafo {
 			
 			for(int i=0; i<this.getArestas().size() ;i++){
 				
-				if ((aresta==this.getArestas().get(i))&&(this.getArestas().get(i).isCicloVerificado()==false))
-					this.getArestas().get(i).setCicloVerificado(true);
+				if ((aresta==this.getArestas().get(i))&&(this.getArestas().get(i).isVisitado()==false))
+					this.getArestas().get(i).setVisitado(true);
 				else if (aresta!=this.getArestas().get(i)){
 					
 					if (anterior.getNome().equals(this.getArestas().get(i).getOrigem().getNome())){
 						
 						if	(aresta.getOrigem().getNome().equals(this.getArestas().get(i).getDestino().getNome())){
-							this.limparCicloVerificado();
+							this.limparArestaVisitada();
 							return true;
 						}else{
 							anterior = this.getArestas().get(i).getDestino();
-							this.getArestas().get(i).setCicloVerificado(true);
+							this.getArestas().get(i).setVisitado(true);
 						}	
 						
 					}else if (anterior.getNome().equals(this.getArestas().get(i).getDestino().getNome())){
 						
 						if	(aresta.getOrigem().getNome().equals(this.getArestas().get(i).getOrigem().getNome())){
-							this.limparCicloVerificado();
+							this.limparArestaVisitada();
 							return true;
 						}else{
 							anterior = this.getArestas().get(i).getOrigem();
-							this.getArestas().get(i).setCicloVerificado(true);
+							this.getArestas().get(i).setVisitado(true);
 						}
 					}
 				}
 			}
 		}
-		this.limparCicloVerificado();
+		this.limparArestaVisitada();
 		return false;
 	}
 	
@@ -340,24 +335,32 @@ public class Grafo {
     	return arvoreProfundidade;
     }
     
-    //metodo que retorna um booleano como resposta da busca pelo vertice e seta como true os vertices que estarao na arvore de Busca em Profundidade
+    //metodo recursivo que retorna um booleano como resposta da busca pelo vertice e seta como true os vertices e arestas que estarao na arvore de Busca em Profundidade
     public boolean buscaRecursiva(String raiz, String buscado){
 		
     	int posRaiz = this.posicaoVertice(raiz);
     	
     	this.vertices.get(posRaiz).setVisitado(true);
     	
+		//System.out.println(raiz);
+		
     	if (!raiz.equals(buscado)){
     		
 	    	if (this.vertices.get(posRaiz).getVizinhos().size()==1){
 	    		return false;
 	    	}else{
 	    		for(int i=0; i<this.vertices.get(posRaiz).getVizinhos().size();i++){
-		    		if (!this.vertices.get(posRaiz).getVizinhos().get(i).isVisitado()){
+		    		
+	    			
+	    			//System.out.println(raiz);
+	    			
+	    			
+	    			if (!this.vertices.get(posRaiz).getVizinhos().get(i).isVisitado()){
 		    			//acha aresta entre eles e seta como visitada
 		    			this.acharAresta(this.vertices.get(posRaiz), this.vertices.get(posRaiz).getVizinhos().get(i)).setVisitado(true);
 		    			//continua busca recursivamente
-		    			return this.buscaRecursiva(this.vertices.get(posRaiz).getVizinhos().get(i).getNome(),buscado);
+		    			if (this.buscaRecursiva(this.vertices.get(posRaiz).getVizinhos().get(i).getNome(),buscado))
+		    				return true;
 		    		}
 		    	}
 	    	}

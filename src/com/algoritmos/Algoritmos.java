@@ -52,8 +52,8 @@ public class Algoritmos {
 					}
 				}
 				
-				inicial.limparPesoVerificado();
-				arvoreKruskal.limparPesoVerificado();
+				inicial.limparArestaVisitada();
+				arvoreKruskal.limparArestaVisitada();
 				
 				arvoreKruskal.imprimeArvore();
 				break;
@@ -72,8 +72,11 @@ public class Algoritmos {
 				destino = Keyboard.readString();
 				arvoreBuscaProfundidade.setArestas(inicial.buscaEmProfundidade(origem, destino));
 				
+				//limpando verificadores booleanos
 				inicial.limparVerticeVisitado();
+				inicial.limparArestaVisitada();
 				arvoreBuscaProfundidade.limparVerticeVisitado();
+				arvoreBuscaProfundidade.limparArestaVisitada();
 				
 				arvoreBuscaProfundidade.imprimeArvore();
 				break;

@@ -5,8 +5,6 @@ public class Aresta {
 	private int peso;
 	private Vertice origem;
 	private Vertice destino;
-	private boolean pesoVerificado = false; // utilizada no método identificacao de pesos
-	private boolean cicloVerificado = false; // utilizada no método identificacao de ciclos
 	private boolean visitado = false;
 	
 	
@@ -22,22 +20,6 @@ public class Aresta {
 
 	public void setVisitado(boolean visitado) {
 		this.visitado = visitado;
-	}
-
-	public boolean isPesoVerificado() {
-		return pesoVerificado;
-	}
-
-	public void setPesoVerificado(boolean verificado) {
-		this.pesoVerificado = verificado;
-	}
-
-	public boolean isCicloVerificado() {
-		return cicloVerificado;
-	}
-
-	public void setCicloVerificado(boolean cicloVerificado) {
-		this.cicloVerificado = cicloVerificado;
 	}
 
 	public int getPeso() {
@@ -64,6 +46,13 @@ public class Aresta {
 	public void setDestino(Vertice destino) {
 		
 		this.destino = destino;
+	}
+	
+	@Override
+	public String toString() {
+		String s = " ";
+		s+= this.getOrigem().getNome() + this.getDestino().getNome();
+		return s;
 	}
 
 }
