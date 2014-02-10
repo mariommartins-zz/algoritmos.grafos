@@ -9,6 +9,11 @@ public class Grafo {
 	private ArrayList<Vertice> vertices = new ArrayList<Vertice>();
 	
 	
+	public void clearLists(){
+		this.arestas.clear();
+		this.vertices.clear();
+	}
+
 	public void addAresta(int peso, String origem, String destino){
 		int i,j,k;
 		
@@ -26,8 +31,10 @@ public class Grafo {
 		this.vertices.get(i).addIncidentes(this.arestas.get(k-1));
 		this.vertices.get(j).addIncidentes(this.arestas.get(k-1));
 	}
-	
+			
 	public void setArestas(ArrayList<Aresta> arestas) {
+		this.clearLists();
+		
 		for (int i=0; i<arestas.size() ; i++)
 			this.addAresta(arestas.get(i).getPeso(), 
 							arestas.get(i).getOrigem().getNome(), 
@@ -35,43 +42,44 @@ public class Grafo {
 	}
 
 	public void setVertices(ArrayList<Vertice> vertices) {
+		this.clearLists();
+		
 		for (int i=0; i<vertices.size() ; i++){
-			this.vertices.add(vertices.get(i));
-			
-			//adicionando as arestas correspondentes a tais vertices
-			for(int j=0; j<vertices.get(i).getIncidentes().size(); j++){
-				
-				if ( (vertices.get(i).getNome().equals(vertices.get(i).getIncidentes().get(j).getOrigem().getNome())) &&
-						(this.posicaoVertice(vertices.get(i).getIncidentes().get(j).getDestino().getNome())==this.vertices.size()) ){
+
+			//se ja existir na lista nao passara daqui
+			if(this.posicaoVertice(vertices.get(i).getNome())==this.vertices.size()){
+				//adicionando as arestas correspondentes a tais vertices
+				for(int j=0; j<vertices.get(i).getIncidentes().size(); j++){
+
+					//se o adicionado for a origem desse seu incidente, e o seu destino estiver na lista de vertices
+					if ( (vertices.get(i).getNome().equals(vertices.get(i).getIncidentes().get(j).getOrigem().getNome())) &&
+							(this.posicaoVertice(vertices.get(i).getIncidentes().get(j).getDestino().getNome())!=this.vertices.size()) ){
+
+						this.addAresta(vertices.get(i).getIncidentes().get(j).getPeso(), 
+										vertices.get(i).getIncidentes().get(j).getOrigem().getNome(), 
+										vertices.get(i).getIncidentes().get(j).getDestino().getNome());
 					
-					this.addAresta(vertices.get(i).getIncidentes().get(j).getPeso(), 
-									vertices.get(i).getIncidentes().get(j).getOrigem().getNome(), 
-									vertices.get(i).getIncidentes().get(j).getDestino().getNome());
-					
-				}else if ( (vertices.get(i).getNome().equals(vertices.get(i).getIncidentes().get(j).getDestino().getNome())) &&
-						(this.posicaoVertice(vertices.get(i).getIncidentes().get(j).getOrigem().getNome())==this.vertices.size()) ){
-					
-					this.addAresta(vertices.get(i).getIncidentes().get(j).getPeso(), 
-							vertices.get(i).getIncidentes().get(j).getOrigem().getNome(), 
-							vertices.get(i).getIncidentes().get(j).getDestino().getNome());
-					
+					//se o adicionado for o destino desse seu incidente, e o sua origem estiver na lista de vertices	
+					}else if ( (vertices.get(i).getNome().equals(vertices.get(i).getIncidentes().get(j).getDestino().getNome())) &&
+							(this.posicaoVertice(vertices.get(i).getIncidentes().get(j).getOrigem().getNome())!=this.vertices.size()) ){
+
+						this.addAresta(vertices.get(i).getIncidentes().get(j).getPeso(), 
+								vertices.get(i).getIncidentes().get(j).getOrigem().getNome(), 
+								vertices.get(i).getIncidentes().get(j).getDestino().getNome());
+						
+					}
 				}
+				this.addVertice(vertices.get(i).getNome());
 			}
 		}
 	}
 
 	public int addVertice(String nome){
-		int i= 0;
+		int i= this.posicaoVertice(nome); 
 		
-		if(this.vertices.size()==i){
+		if(i==this.vertices.size()){
 			this.vertices.add(new Vertice(nome));
-		}else{
-			i = this.posicaoVertice(nome);
-			if(i!=this.vertices.size())
-				return i;
-			else{
-				this.vertices.add(new Vertice(nome));						
-			}			
+			return (this.vertices.size() - 1);
 		}
 		
 		return i;
@@ -250,7 +258,6 @@ public class Grafo {
                 // lista
 
                 atual = naoVisitados.get(0);
-                System.out.println("Pegou esse vertice:  " + atual);
                 /*
                  * Para cada vizinho (cada aresta), calcula-se a sua possivel
                  * distancia, somando a distancia do vertice atual com a da aresta
@@ -260,8 +267,7 @@ public class Grafo {
                 for (int i = 0; i < atual.getIncidentes().size(); i++) {
 
                         vizinho = atual.getIncidentes().get(i).getDestino();
-                        System.out.println("Olhando o vizinho de " + atual + ": "
-                                        + vizinho);
+                        
                         if (!vizinho.isVisitado()) {
 
                                 // Comparando a distância do vizinho com a possível
@@ -308,10 +314,8 @@ public class Grafo {
                  */
 
                 Collections.sort(naoVisitados);
-                System.out.println("Nao foram visitados ainda:"+naoVisitados);
 
         }
-        System.out.println("Menor caminho: " + menorCaminho);
         return menorCaminho;
     }
 
@@ -341,39 +345,62 @@ public class Grafo {
     	int posRaiz = this.posicaoVertice(raiz);
     	
     	this.vertices.get(posRaiz).setVisitado(true);
-    	
-		//System.out.println(raiz);
 		
     	if (!raiz.equals(buscado)){
-    		
-	    	if (this.vertices.get(posRaiz).getVizinhos().size()==1){
-	    		return false;
-	    	}else{
-	    		for(int i=0; i<this.vertices.get(posRaiz).getVizinhos().size();i++){
-		    		
-	    			
-	    			//System.out.println(raiz);
-	    			
-	    			
-	    			if (!this.vertices.get(posRaiz).getVizinhos().get(i).isVisitado()){
-		    			//acha aresta entre eles e seta como visitada
-		    			this.acharAresta(this.vertices.get(posRaiz), this.vertices.get(posRaiz).getVizinhos().get(i)).setVisitado(true);
-		    			//continua busca recursivamente
-		    			if (this.buscaRecursiva(this.vertices.get(posRaiz).getVizinhos().get(i).getNome(),buscado))
-		    				return true;
-		    		}
-		    	}
+    		for(int i=0; i<this.vertices.get(posRaiz).getVizinhos().size();i++){
+    			
+    			if (!this.vertices.get(posRaiz).getVizinhos().get(i).isVisitado()){
+	    			//acha aresta entre eles e seta como visitada
+	    			this.acharAresta(this.vertices.get(posRaiz), this.vertices.get(posRaiz).getVizinhos().get(i)).setVisitado(true);
+	    			//continua busca recursivamente
+	    			if (this.buscaRecursiva(this.vertices.get(posRaiz).getVizinhos().get(i).getNome(),buscado))
+	    				return true;
+	    		}
 	    	}
     	}else{
     		return true;
     	}
     	return false;
     }
+    
+//------------------FECHO-TRANSITIVO----------------------------------------
+    
+    public ArrayList<Vertice> fechoTransitivo(String vertice){
+    	ArrayList<Vertice> fechoTransitivo = new ArrayList<Vertice>(); 
+    	
+    	this.marcaVerticesFechoTransitivo(vertice);
+    	this.vertices.get(this.posicaoVertice(vertice)).setVisitado(false);
+    	
+    	
+    	for (int i=0; i<this.vertices.size(); i++){
+    		if(this.vertices.get(i).isVisitado())
+    			fechoTransitivo.add(this.vertices.get(i));
+    	}
+    	
+    	return fechoTransitivo;
+	}
+
+    public void marcaVerticesFechoTransitivo(String vertice) {
+    	
+    	int posRaiz = this.posicaoVertice(vertice);
+    	
+    	this.vertices.get(posRaiz).setVisitado(true);
+    		
+    	for(int i=0; i<this.vertices.get(posRaiz).getVizinhos().size();i++){			
+			
+			if (!this.vertices.get(posRaiz).getVizinhos().get(i).isVisitado()){
+				
+    			//continua busca recursivamente
+    			this. marcaVerticesFechoTransitivo(this.vertices.get(posRaiz).getVizinhos().get(i).getNome());
+    		}
+    	}
+	
+    }
 
 //--------------------------------------------------------------------------
 }
 
-
+	
 
 
 

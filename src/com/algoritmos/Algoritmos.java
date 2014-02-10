@@ -10,9 +10,8 @@ public class Algoritmos {
 	public static void main(String arg[]) {
 
 		Grafo inicial = new Grafo();
-		Grafo arvoreKruskal = new Grafo();
-		Grafo caminhoDijkstra = new Grafo();
-		Grafo arvoreBuscaProfundidade = new Grafo();
+		Grafo resultado = new Grafo();
+		
 		Aresta arestaAux;
 		Vertice verticeAux1, verticeAux2;
 		int opcao = 5, peso;
@@ -24,9 +23,11 @@ public class Algoritmos {
 			System.out.println("3 - Obter arvore de Kruskal");
 			System.out.println("4 - Obter caminho de Dijkstra");
 			System.out.println("5 - Obter arvore de Busca em Profundidade");
+			System.out.println("6 - Obter Fecho Transitivo de um vertice em tal Grafo");
 			System.out.println("0 - fim");
 			
 			opcao = Keyboard.readInt();
+			resultado.clearLists();
 			switch (opcao){
 			case 1:
 				peso = Keyboard.readInt();
@@ -41,44 +42,60 @@ public class Algoritmos {
 				break;
 			case 3:
 				//Algoritmo de Kruskal
+				
 				for(int i=0;i<inicial.getArestas().size();i++){
 					//busca aresta com menor peso ainda nao verificado no grafo inicial
 					arestaAux= inicial.menorPeso();
 					//se tal aresta nao formar um ciclo ao ser adicionada, ela eh adicionada a arvore de Kruskal
-					if(!arvoreKruskal.temCiclo(arestaAux)){
-						arvoreKruskal.addAresta(arestaAux.getPeso(),
+					if(!resultado.temCiclo(arestaAux)){
+						resultado.addAresta(arestaAux.getPeso(),
 												arestaAux.getOrigem().getNome(),
 												arestaAux.getDestino().getNome());
 					}
 				}
 				
 				inicial.limparArestaVisitada();
-				arvoreKruskal.limparArestaVisitada();
+				resultado.limparArestaVisitada();
 				
-				arvoreKruskal.imprimeArvore();
+				resultado.imprimeArvore();
 				break;
 			case 4:
 				//Algoritmo de Dijkstra
+				
 				verticeAux1 = inicial.acharVertice(Keyboard.readString());
 				verticeAux2 = inicial.acharVertice(Keyboard.readString());
-				caminhoDijkstra.setVertices(inicial.encontrarMenorCaminhoDijkstra(verticeAux1, verticeAux2));
+				resultado.setVertices(inicial.encontrarMenorCaminhoDijkstra(verticeAux1, verticeAux2));
 				
 				inicial.limparVerticeVisitado();
+				
+				System.out.println(resultado.getVertices());
 				break;
 				
 			case 5:
 				//Algoritmo de Busca em Profundidade
+				
 				origem = Keyboard.readString();
 				destino = Keyboard.readString();
-				arvoreBuscaProfundidade.setArestas(inicial.buscaEmProfundidade(origem, destino));
+				resultado.setArestas(inicial.buscaEmProfundidade(origem, destino));
 				
 				//limpando verificadores booleanos
 				inicial.limparVerticeVisitado();
 				inicial.limparArestaVisitada();
-				arvoreBuscaProfundidade.limparVerticeVisitado();
-				arvoreBuscaProfundidade.limparArestaVisitada();
+				resultado.limparVerticeVisitado();
+				resultado.limparArestaVisitada();
 				
-				arvoreBuscaProfundidade.imprimeArvore();
+				resultado.imprimeArvore();
+				break;
+			case 6:
+				//Algoritmo de Fecho Transitivo
+				
+				origem = Keyboard.readString();
+				resultado.setVertices(inicial.fechoTransitivo(origem));
+				
+				inicial.limparVerticeVisitado();
+				
+				System.out.println(resultado.getVertices());
+				
 				break;
 			case 0:
 				break;

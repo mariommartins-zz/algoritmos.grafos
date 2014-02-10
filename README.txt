@@ -1,11 +1,11 @@
 Algoritmos a serem implementados:
 
-	-Algoritmo de Kruskal; OK
-	-Algoritmo de Dijkstra; OK
+	-Algoritmo de Kruskal;	OK
+	-Algoritmo de Dijkstra;	OK
 	-Busca em Largura;	
-	-Busca em Profundidade; OK
+	-Busca em Profundidade;	OK
 	-Ordenação topologica;
-	-Fecho transitivo;
+	-Fecho transitivo;		OK
 	-Algoritmo de Warshall;
 
 Produto: Implementação e relatório.
@@ -74,7 +74,6 @@ ___Busca em Profundidade___
 
 -Busca um vertice em um determinado Grafo.
 -Recebe Grafo dado pelo usuario tratando prioritariamente dos vertices como principal objeto de fluxo e sinalizando arestas passadas para que se monte a arvore da Busca em Profundidade.
--A ENTRADA que 
 -A ENTRADA que deve ser dada ao se chamar tal Algoritmo a partir do console e:
 
 	1º Origem (String) - Nome do vertice raiz do grafo;
@@ -84,7 +83,17 @@ ___Busca em Profundidade___
 	1º "buscaEmProfundidade" (metodo que chama a busca recursiva em profundidade e retorna a arvore da busca em profundidade)
 	2º "buscaRecursiva" (metodo recursivo que retorna um booleano como resposta da busca pelo vertice e seta como true os vertices e arestas que estarao na arvore de Busca em Profundidade)
 
+___Fecho Transitivo___
 
+-Busca um Conjunto de vertices os quais podem ser encontrados em um caminho a partir de um vertice selecionado pelo usuário em um determinado Grafo.
+-Recebe Grafo dado pelo usuario tratando prioritariamente dos vertices como principal objeto de fluxo
+-A ENTRADA que deve ser dada ao se chamar tal Algoritmo a partir do console e:
+
+	1º Origem (String) - Nome do vertice raiz do grafo;
+
+-Os metodos de tal algoritmo estao na classe Grafo, sendo:
+	1º "fechoTransitivo" (metodo que chama o metodo recursiva em que se busca os vertices que podem ser encontrados a partir do vertice de Origem dado)
+	2º "marcaVerticesFechoTransitivo" (metodo recursivo sem retorno que seleciona como visualizado todos os vertices que podem ser vizualizados pelo vertice dado pelo usuário)
 
 
 
