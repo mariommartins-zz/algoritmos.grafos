@@ -2,11 +2,11 @@ Algoritmos a serem implementados:
 
 	-Algoritmo de Kruskal;	OK
 	-Algoritmo de Dijkstra;	OK
-	-Busca em Largura;	
+	-Busca em Largura;	OK
 	-Busca em Profundidade;	OK
-	-Ordenação topologica;
+	-Ordenação topologica;  OK
 	-Fecho transitivo;		OK
-	-Algoritmo de Warshall;
+	-Algoritmo de Warshall; OK
 
 Produto: Implementação e relatório.
 

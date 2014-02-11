@@ -2,12 +2,13 @@ package com.estruturas;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 
 public class Grafo {
 	
 	private ArrayList<Aresta> arestas = new ArrayList<Aresta>();
 	private ArrayList<Vertice> vertices = new ArrayList<Vertice>();
-	
+	private boolean hasCycle = false;
 	
 	public void clearLists(){
 		this.arestas.clear();
@@ -22,9 +23,12 @@ public class Grafo {
 		j = this.addVertice(destino);
 		
 		//adiciona aresta na lista
-		this.arestas.add(new Aresta(peso,
-									this.vertices.get(i),
-									this.vertices.get(j)) );
+		Aresta a = new Aresta(peso,
+				this.vertices.get(i),
+				this.vertices.get(j));
+		
+		temCiclo(a);
+		this.arestas.add(a);
 		k = this.arestas.size();
 		
 		//adiciona aresta na lista de arestas incidentes em cada vertice
@@ -130,7 +134,7 @@ public class Grafo {
 				return this.arestas.get(i);
 			}
 		}
-		return this.arestas.get(this.arestas.size());
+		return null;
 	}
 	
 	public ArrayList<Aresta> getArestas() {
@@ -182,6 +186,7 @@ public class Grafo {
 						
 						if	(aresta.getOrigem().getNome().equals(this.getArestas().get(i).getDestino().getNome())){
 							this.limparArestaVisitada();
+							this.hasCycle = true;
 							return true;
 						}else{
 							anterior = this.getArestas().get(i).getDestino();
@@ -192,6 +197,7 @@ public class Grafo {
 						
 						if	(aresta.getOrigem().getNome().equals(this.getArestas().get(i).getOrigem().getNome())){
 							this.limparArestaVisitada();
+							this.hasCycle = true;
 							return true;
 						}else{
 							anterior = this.getArestas().get(i).getOrigem();
@@ -202,6 +208,7 @@ public class Grafo {
 			}
 		}
 		this.limparArestaVisitada();
+		this.hasCycle = false;
 		return false;
 	}
 	
@@ -398,20 +405,120 @@ public class Grafo {
     }
 
 //--------------------------------------------------------------------------
+
+  //metodo que chama a busca recursiva em profundidade e retorna a arvore da busca em profundidade
+    public	ArrayList<Aresta> buscaEmLargura(String raiz, String buscado){
+
+    	ArrayList<Aresta> arvoreLargura = new ArrayList<Aresta>(); 
+    	for (Vertice v:this.vertices) {
+    		v.setCor("branco");
+    	}
+    	
+    	Vertice v = this.acharVertice(raiz);
+    	v.setCor("cinza");
+    	
+    	LinkedList<Vertice> queue= new LinkedList<Vertice>();
+    	queue.add(v);
+    	boolean achou = false;
+    	while (queue.size() > 0) {
+    		Vertice current = queue.remove();
+    		current.setCor("preto");
+    		if (current.getNome().equals(buscado)) {
+    			achou = true;
+    			break;
+    		}
+    		
+    		for (Vertice visinho:current.getVizinhos()) {
+    			if(visinho.getCor().equals("branco")){
+    				visinho.setCor("cinza");
+    				queue.add(visinho);
+    				arvoreLargura.add(this.acharAresta(current, visinho));
+    			}
+    		}
+    	}
+    	
+    	if (achou) {
+    		System.out.println("Vertice encontrado");
+    	} else {
+    		System.out.println("Vertice nao encontrado");
+    	}
+    	
+    	return arvoreLargura;
+    }
+    
+    public void DFS(Vertice v, ArrayList<Vertice> l) {
+    	v.setVisitado(true);
+    	
+    	for (Vertice visinho: v.getVizinhos()) {
+    		if(!visinho.isVisitado())
+    			DFS(visinho, l);
+    	}
+    	
+    	l.add(v);
+    }
+    
+    public ArrayList<Vertice> topologicalSort() {
+    	ArrayList<Vertice> order = new ArrayList<Vertice>();
+    	if(this.hasCycle)
+    		System.out.println("Não é possível obter uma ordenação topológica, pois este grafo possui ciclo(s)");
+    	for(Vertice v:vertices){
+    		if(!v.isVisitado())
+    			DFS(v, order);
+    	}
+    	
+    	Collections.reverse(order);
+    	return order;
+    }
+    
+    public int[][] createGraphMatrix(){
+    	int[][] matrix = new int[vertices.size()][vertices.size()];
+    	
+    	for(int i = 0; i < vertices.size(); i++){
+    		for(int j = 0; j < vertices.size(); j++){
+    			if(i==j){
+    				matrix[i][j] = 0;
+    			} else {
+    				Aresta a = acharAresta(vertices.get(i), vertices.get(j));
+    				if(a != null){
+    					matrix[i][j] = a.getPeso();
+    				} else {
+    					matrix[i][j] = Integer.MAX_VALUE;//inifinty
+    				}
+    			}
+    				
+    		}
+    	}
+    	
+    	return matrix;
+    }
+    
+    public int[][] wharshall(){
+    	int n = this.vertices.size();
+    	
+    	int[][] dist = createGraphMatrix();
+    	int[][] pred = new int[n][n];
+    	
+    	for (int i = 0; i < n; i++) {
+    		for(int j = 0; j < n; j++){
+    			if(dist[i][j] < Integer.MAX_VALUE){
+    				pred[i][j] = i;
+    			}
+    		}
+    	}
+    	
+    	for (int k = 0; k < n; k++) {
+    		for (int i = 0; i < n; i++) {
+    			for (int j = 0; j < n; j++) {
+    				if(dist[i][j] > dist[i][k] + dist[k][j]) {
+    					dist[i][j] = dist[i][k] + dist[k][j];
+    					pred[i][j] = pred[k][j];
+    				}
+    			}
+    		}
+    	}
+    	
+    	return dist;
+    }
+    
 }
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -1,5 +1,7 @@
 package com.algoritmos;
 
+import java.util.ArrayList;
+
 import com.IO.Keyboard;
 import com.estruturas.Aresta;
 import com.estruturas.Grafo;
@@ -83,7 +85,6 @@ public class Algoritmos {
 				inicial.limparArestaVisitada();
 				resultado.limparVerticeVisitado();
 				resultado.limparArestaVisitada();
-				
 				resultado.imprimeArvore();
 				break;
 			case 6:
@@ -95,7 +96,35 @@ public class Algoritmos {
 				inicial.limparVerticeVisitado();
 				
 				System.out.println(resultado.getVertices());
+				resultado.imprimeArvore();
+				break;
+			case 7:
+				origem = Keyboard.readString();
+				destino = Keyboard.readString();
+				resultado.setArestas(inicial.buscaEmLargura(origem, destino));
 				
+				resultado.imprimeArvore();
+				break;
+			case 8: 
+				//limpando verificadores booleanos
+				inicial.limparVerticeVisitado();
+				inicial.limparArestaVisitada();
+				
+				ArrayList<Vertice> vertices = inicial.topologicalSort();
+				int count = 1;
+				for (Vertice vertice: vertices) {
+					System.out.println(count + " " + vertice.getNome());
+					count++;
+				}
+				break;
+			case 9:
+				int[][] dist = inicial.wharshall();
+				for(int i = 0; i < dist.length; i++){
+					for(int j = 0; j < dist.length; j++){
+						System.out.print(dist[i][j] + " ");
+					}
+					System.out.print("\n");
+				}
 				break;
 			case 0:
 				break;
