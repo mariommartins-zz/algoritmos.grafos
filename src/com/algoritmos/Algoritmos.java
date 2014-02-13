@@ -95,8 +95,8 @@ public class Algoritmos {
 					//para cada vertice do seu fecho transitivo
 					for(int j=0;j<inicial.fechoTransitivo(inicial.getVertices().get(i).getNome()).size();j++){
 						arestaAux = resultado.acharAresta(inicial.getVertices().get(i), inicial.fechoTransitivo(inicial.getVertices().get(i).getNome()).get(j)); 
-						//verifica se uma aresta com esse vertice e o vertice inicial já existe
-						//se não existe
+						//verifica se uma aresta com esse vertice e o vertice inicial ja existe
+						//se nao existe
 						if(arestaAux==null){
 							//adiciona aresta
 							resultado.addAresta(0,
