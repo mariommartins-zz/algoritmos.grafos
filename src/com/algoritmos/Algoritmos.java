@@ -26,10 +26,20 @@ public class Algoritmos {
 			System.out.println("4 - Obter caminho de Dijkstra");
 			System.out.println("5 - Obter arvore de Busca em Profundidade");
 			System.out.println("6 - Obter Fecho Transitivo de um vertice em tal Grafo");
+			System.out.println("7 - Obter arvore de Busca em Largura");
+			System.out.println("8 - Obter Ordenacao Topologica");
+			System.out.println("9 - Obter Matriz do Algoritmo de Warshall");
 			System.out.println("0 - fim");
 			
 			opcao = Keyboard.readInt();
+			
+			//dando um reset no grafo de resultado
 			resultado.clearLists();
+			
+			//limpando verificadores booleanos
+			inicial.limparArestaVisitada();
+			inicial.limparVerticeVisitado();
+			
 			switch (opcao){
 			case 1:
 				peso = Keyboard.readInt();
@@ -56,9 +66,6 @@ public class Algoritmos {
 					}
 				}
 				
-				inicial.limparArestaVisitada();
-				resultado.limparArestaVisitada();
-				
 				resultado.imprimeArvore();
 				break;
 			case 4:
@@ -67,8 +74,6 @@ public class Algoritmos {
 				verticeAux1 = inicial.acharVertice(Keyboard.readString());
 				verticeAux2 = inicial.acharVertice(Keyboard.readString());
 				resultado.setVertices(inicial.encontrarMenorCaminhoDijkstra(verticeAux1, verticeAux2));
-				
-				inicial.limparVerticeVisitado();
 				
 				System.out.println(resultado.getVertices());
 				break;
@@ -80,11 +85,6 @@ public class Algoritmos {
 				destino = Keyboard.readString();
 				resultado.setArestas(inicial.buscaEmProfundidade(origem, destino));
 				
-				//limpando verificadores booleanos
-				inicial.limparVerticeVisitado();
-				inicial.limparArestaVisitada();
-				resultado.limparVerticeVisitado();
-				resultado.limparArestaVisitada();
 				resultado.imprimeArvore();
 				break;
 			case 6:
@@ -93,12 +93,12 @@ public class Algoritmos {
 				origem = Keyboard.readString();
 				resultado.setVertices(inicial.fechoTransitivo(origem));
 				
-				inicial.limparVerticeVisitado();
-				
 				System.out.println(resultado.getVertices());
 				resultado.imprimeArvore();
 				break;
 			case 7:
+				//Algoritmo de Busca em Largura
+				
 				origem = Keyboard.readString();
 				destino = Keyboard.readString();
 				resultado.setArestas(inicial.buscaEmLargura(origem, destino));
@@ -106,9 +106,7 @@ public class Algoritmos {
 				resultado.imprimeArvore();
 				break;
 			case 8: 
-				//limpando verificadores booleanos
-				inicial.limparVerticeVisitado();
-				inicial.limparArestaVisitada();
+				//Ordenacao Topologica
 				
 				ArrayList<Vertice> vertices = inicial.topologicalSort();
 				int count = 1;
@@ -118,7 +116,9 @@ public class Algoritmos {
 				}
 				break;
 			case 9:
-				int[][] dist = inicial.wharshall();
+				//Algoritmo de Warshall
+				
+				int[][] dist = inicial.warshall();
 				for(int i = 0; i < dist.length; i++){
 					for(int j = 0; j < dist.length; j++){
 						System.out.print(dist[i][j] + " ");

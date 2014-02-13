@@ -13,6 +13,15 @@ public class Grafo {
 	public void clearLists(){
 		this.arestas.clear();
 		this.vertices.clear();
+		this.setHasCycle(false);
+	}
+
+	public boolean isHasCycle() {
+		return hasCycle;
+	}
+
+	public void setHasCycle(boolean hasCycle) {
+		this.hasCycle = hasCycle;
 	}
 
 	public void addAresta(int peso, String origem, String destino){
@@ -87,6 +96,11 @@ public class Grafo {
 		}
 		
 		return i;
+	}
+	
+	public void limparVerticesPai(){
+		for(int i=0; i<this.getVertices().size() ;i++)
+			this.getVertices().get(i).setPai(null);
 	}
 	
 	public void limparVerticeVisitado(){
@@ -212,7 +226,7 @@ public class Grafo {
 		return false;
 	}
 	
-//----------------------DIJKSTRA--------------------------------------------
+//----------------------DIJKSTRA-------------------------------------------
 	
 	//metodo que retorna o caminho menos custoso entre dois vertices a partid do algoritmo de Dijkstra
     public ArrayList<Vertice> encontrarMenorCaminhoDijkstra(Vertice v1,Vertice v2) {
@@ -230,6 +244,9 @@ public class Grafo {
 
         // Variavel que marca o vizinho do vertice atualmente visitado
         Vertice vizinho;
+        
+        // Aresta que liga o atual ao seu vizinho;
+        Aresta ligacao;
 
         // Lista dos vertices que ainda nao foram visitados
         ArrayList<Vertice> naoVisitados = new ArrayList<Vertice>();
@@ -241,92 +258,86 @@ public class Grafo {
 
         // Colocando a distancias iniciais 
         for (int i = 0; i < this.getVertices().size(); i++) {
-
-                // Vertice atual tem distancia zero, e todos os outros,
-                // 9999("infinita")
-                if (this.getVertices().get(i).getNome()
-                                .equals(v1.getNome())) {
-
-                        this.getVertices().get(i).setDistancia(0);
-                } else {
-                        this.getVertices().get(i).setDistancia(9999);
-                }
-                // Insere o vertice na lista de vertices nao visitados
-                naoVisitados.add(this.getVertices().get(i));
+            // Vertice atual tem distancia zero, e todos os outros,
+            // 9999("infinita")
+            if (this.getVertices().get(i).getNome().equals(v1.getNome()))
+                this.getVertices().get(i).setDistancia(0);
+            else
+                this.getVertices().get(i).setDistancia(9999);
+            // Insere o vertice na lista de vertices nao visitados
+            naoVisitados.add(this.getVertices().get(i));
         }
 
         Collections.sort(naoVisitados);
 
         // O algoritmo continua ate que todos os vertices sejam visitados
         while (!naoVisitados.isEmpty()) {
+            // Toma-se sempre o vertice com menor distancia, que eh o primeiro
+            // da
+            // lista
 
-                // Toma-se sempre o vertice com menor distancia, que eh o primeiro
-                // da
-                // lista
+            atual = naoVisitados.get(0);
+            /*
+             * Para cada vizinho (cada aresta), calcula-se a sua possivel
+             * distancia, somando a distancia do vertice atual com a da aresta
+             * correspondente. Se essa distancia for menor que a distancia do
+             * vizinho, esta eh atualizada.
+             */
+            for (int i = 0; i < atual.getVizinhos().size(); i++) {
+            	
+                vizinho = atual.getVizinhos().get(i);
+                
+                if (!vizinho.isVisitado()) {
+                	
+                    // Comparando a dist‚ncia do vizinho com a possÌvel
+                    // dist‚ncia
+                	ligacao = this.acharAresta(atual,vizinho);
+                    if (vizinho.getDistancia() > (atual.getDistancia() + ligacao.getPeso())) {
+                        vizinho.setDistancia(atual.getDistancia()
+                                        + ligacao.getPeso());
+                        vizinho.setPai(atual);
 
-                atual = naoVisitados.get(0);
-                /*
-                 * Para cada vizinho (cada aresta), calcula-se a sua possivel
-                 * distancia, somando a distancia do vertice atual com a da aresta
-                 * correspondente. Se essa distancia for menor que a distancia do
-                 * vizinho, esta eh atualizada.
-                 */
-                for (int i = 0; i < atual.getIncidentes().size(); i++) {
+                        /*
+                         * Se o vizinho eh o vertice procurado, e foi feita uma
+                         * mudanca na distancia, a lista com o menor caminho
+                         * anterior eh apagada, pois existe um caminho menor
+                         * vertices pais, ateh o vertice origem.
+                         */
+                        if (vizinho == v2) {
+                            menorCaminho.clear();
+                            verticeCaminho = vizinho;
+                            menorCaminho.add(vizinho);
+                            while (verticeCaminho.getPai() != null) {
+                                menorCaminho.add(verticeCaminho.getPai());
+                                verticeCaminho = verticeCaminho.getPai();
 
-                        vizinho = atual.getIncidentes().get(i).getDestino();
-                        
-                        if (!vizinho.isVisitado()) {
+                            }
+                            // Ordena a lista do menor caminho, para que ele
+                            // seja exibido da origem ao destino.
+                            Collections.sort(menorCaminho);
 
-                                // Comparando a dist‚ncia do vizinho com a possÌvel
-                                // dist‚ncia
-                                if (vizinho.getDistancia() > (atual.getDistancia() + atual
-                                                .getIncidentes().get(i).getPeso())) {
-
-                                        vizinho.setDistancia(atual.getDistancia()
-                                                        + atual.getIncidentes().get(i).getPeso());
-                                        vizinho.setPai(atual);
-
-                                        /*
-                                         * Se o vizinho eh o vertice procurado, e foi feita uma
-                                         * mudanca na distancia, a lista com o menor caminho
-                                         * anterior eh apagada, pois existe um caminho menor
-                                         * vertices pais, ateh o vertice origem.
-                                         */
-                                        if (vizinho == v2) {
-                                                menorCaminho.clear();
-                                                verticeCaminho = vizinho;
-                                                menorCaminho.add(vizinho);
-                                                while (verticeCaminho.getPai() != null) {
-
-                                                        menorCaminho.add(verticeCaminho.getPai());
-                                                        verticeCaminho = verticeCaminho.getPai();
-
-                                                }
-                                                // Ordena a lista do menor caminho, para que ele
-                                                // seja exibido da origem ao destino.
-                                                Collections.sort(menorCaminho);
-
-                                        }
-                                }
                         }
-
+                    }
                 }
-                // Marca o vertice atual como visitado e o retira da lista de nao
-                // visitados
-                atual.setVisitado(true);
-                naoVisitados.remove(atual);
-                /*
-                 * Ordena a lista, para que o vertice com menor distancia fique na
-                 * primeira posicao
-                 */
 
-                Collections.sort(naoVisitados);
+            }
+            // Marca o vertice atual como visitado e o retira da lista de nao
+            // visitados
+            atual.setVisitado(true);
+            naoVisitados.remove(atual);
+            /*
+             * Ordena a lista, para que o vertice com menor distancia fique na
+             * primeira posicao
+             */
+
+            Collections.sort(naoVisitados);
 
         }
+        this.limparVerticesPai();
         return menorCaminho;
     }
 
-//------------------BUSCA-EM-PROFUNDIDADE-----------------------------------    
+//------------------BUSCA-EM-PROFUNDIDADE----------------------------------
     
     //metodo que chama a busca recursiva em profundidade e retorna a arvore da busca em profundidade
     public	ArrayList<Aresta> buscaEmProfundidade(String raiz, String buscado){
@@ -336,7 +347,7 @@ public class Grafo {
     	if(this.buscaRecursiva(raiz, buscado))
     		System.out.println("Vertice encontrado");
     	else
-    		System.out.println("Vertice n„o encontrado");
+    		System.out.println("Vertice nao encontrado");
     	
     	for (int i=0; i<this.arestas.size(); i++){
     		if(this.arestas.get(i).isVisitado())
@@ -370,7 +381,7 @@ public class Grafo {
     	return false;
     }
     
-//------------------FECHO-TRANSITIVO----------------------------------------
+//------------------FECHO-TRANSITIVO---------------------------------------
     
     public ArrayList<Vertice> fechoTransitivo(String vertice){
     	ArrayList<Vertice> fechoTransitivo = new ArrayList<Vertice>(); 
@@ -404,9 +415,8 @@ public class Grafo {
 	
     }
 
-//--------------------------------------------------------------------------
-
-  //metodo que chama a busca recursiva em profundidade e retorna a arvore da busca em profundidade
+//------------------BUSCA-EM-LARGURA---------------------------------------
+    
     public	ArrayList<Aresta> buscaEmLargura(String raiz, String buscado){
 
     	ArrayList<Aresta> arvoreLargura = new ArrayList<Aresta>(); 
@@ -446,6 +456,8 @@ public class Grafo {
     	return arvoreLargura;
     }
     
+//------------------ORDENACAO-TOPOLOGICA-----------------------------------
+    
     public void DFS(Vertice v, ArrayList<Vertice> l) {
     	v.setVisitado(true);
     	
@@ -460,7 +472,7 @@ public class Grafo {
     public ArrayList<Vertice> topologicalSort() {
     	ArrayList<Vertice> order = new ArrayList<Vertice>();
     	if(this.hasCycle)
-    		System.out.println("Não é possível obter uma ordenação topológica, pois este grafo possui ciclo(s)");
+    		System.out.println("Nao e possivel obter uma ordenacao topologica, pois este grafo possui ciclo(s)");
     	for(Vertice v:vertices){
     		if(!v.isVisitado())
     			DFS(v, order);
@@ -469,6 +481,8 @@ public class Grafo {
     	Collections.reverse(order);
     	return order;
     }
+
+//------------------ALGORITMO-DE-WARSHALL----------------------------------
     
     public int[][] createGraphMatrix(){
     	int[][] matrix = new int[vertices.size()][vertices.size()];
@@ -492,7 +506,7 @@ public class Grafo {
     	return matrix;
     }
     
-    public int[][] wharshall(){
+    public int[][] warshall(){
     	int n = this.vertices.size();
     	
     	int[][] dist = createGraphMatrix();
@@ -519,6 +533,7 @@ public class Grafo {
     	
     	return dist;
     }
-    
+ 
+//-------------------------------------------------------------------------
 }
 

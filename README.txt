@@ -5,7 +5,7 @@ Algoritmos a serem implementados:
 	-Busca em Largura;	OK
 	-Busca em Profundidade;	OK
 	-Ordenação topologica;  OK
-	-Fecho transitivo;		OK
+	-Fecho transitivo;	OK
 	-Algoritmo de Warshall; OK
 
 Produto: Implementação e relatório.

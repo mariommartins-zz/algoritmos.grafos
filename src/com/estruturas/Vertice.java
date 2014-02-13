@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Vertice implements Comparable<Vertice> {
 	private String nome;
-	private int distancia;
+	private int distancia = 0;
 	private Vertice pai;
 	private ArrayList<Aresta> incidentes = new ArrayList<Aresta>();
 	private ArrayList<Vertice> vizinhos = new ArrayList<Vertice>();
